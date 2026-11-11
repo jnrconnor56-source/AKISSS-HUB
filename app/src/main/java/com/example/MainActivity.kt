@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.DownloadManager
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
@@ -13,9 +12,16 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import com.example.ui.AkisssMainScreen
 import com.example.ui.AkisssViewModel
+import com.example.ui.components.SplashScreen
 import com.example.ui.theme.AkisssTheme
 
 class MainActivity : ComponentActivity() {
@@ -48,10 +54,24 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             AkisssTheme {
-                AkisssMainScreen(
-                    viewModel = viewModel,
-                    onOpenDownloadsFolder = { openDeviceDownloadsFolder() }
-                )
+                var showSplash by remember { mutableStateOf(true) }
+
+                Crossfade(
+                    targetState = showSplash,
+                    animationSpec = tween(durationMillis = 600),
+                    label = "splash_crossfade"
+                ) { isSplash ->
+                    if (isSplash) {
+                        SplashScreen(
+                            onSplashFinished = { showSplash = false }
+                        )
+                    } else {
+                        AkisssMainScreen(
+                            viewModel = viewModel,
+                            onOpenDownloadsFolder = { openDeviceDownloadsFolder() }
+                        )
+                    }
+                }
             }
         }
     }
