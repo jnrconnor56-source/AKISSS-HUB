@@ -51,7 +51,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-CR-MATH01",
             description = "Fundamental Senior High School mathematics covering real number systems, algebra, geometry, mensuration, and linear equations.",
             fileSizeFormatted = "4.6 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/core-mathematics-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Mathematics_LM_Y1-FINAL-LEARNERS-VERSION.pdf",
             fileName = "GES_SHS1_Core_Mathematics_Syllabus.pdf",
             topics = listOf(
                 "Sets and Operations on Sets",
@@ -80,7 +80,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-CR-ENG01",
             description = "Comprehensive English language course covering grammar, composition writing, reading comprehension, and phonetics.",
             fileSizeFormatted = "5.2 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/english-language-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/English-Language_LM_Year-1_-LV.pdf",
             fileName = "GES_SHS1_English_Language_Syllabus.pdf",
             topics = listOf(
                 "Parts of Speech & Grammatical Functions",
@@ -108,7 +108,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-CR-SCI01",
             description = "Core integrated science bridging biology, chemistry, physics, and agricultural science fundamentals.",
             fileSizeFormatted = "6.1 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/integrated-science-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/General-Science_LM_Y1_Online_LV.pdf",
             fileName = "GES_SHS1_Integrated_Science_Syllabus.pdf",
             topics = listOf(
                 "Introduction to Science, Safety and Laboratory Apparatus",
@@ -137,7 +137,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-CR-SOC01",
             description = "Examines social relationships, personal development, cultural heritage, and national identity in Ghana.",
             fileSizeFormatted = "4.1 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/social-studies-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Social-Studies-LM-Y1-LV.pdf",
             fileName = "GES_SHS1_Social_Studies_Syllabus.pdf",
             topics = listOf(
                 "Self-Identity, Self-Esteem and Capabilities",
@@ -167,7 +167,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-CR-MATH02",
             description = "Intermediate SHS mathematics covering quadratic equations, plane geometry, trigonometry, and statistical distributions.",
             fileSizeFormatted = "5.0 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/core-mathematics-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Mathematics_LM_Y2-FINAL-LEARNERS-VERSION.pdf",
             fileName = "GES_SHS2_Core_Mathematics_Syllabus.pdf",
             topics = listOf(
                 "Quadratic Equations, Functions and Parabolic Graphs",
@@ -196,7 +196,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-CR-ENG02",
             description = "Advanced writing techniques, argumentative discourse, grammatical concord, idiomatic expressions, and literary appreciation.",
             fileSizeFormatted = "5.4 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/english-language-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/English-Language_LM_Year-2_-LV.pdf",
             fileName = "GES_SHS2_English_Language_Syllabus.pdf",
             topics = listOf(
                 "Argumentative and Expository Essay Formats",
@@ -224,7 +224,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-CR-SCI02",
             description = "Deeper study of organic chemistry, human body systems, electronics, electromagnetism, and environmental conservation.",
             fileSizeFormatted = "6.4 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/integrated-science-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/General-Science_LM_Y2_Online_LV.pdf",
             fileName = "GES_SHS2_Integrated_Science_Syllabus.pdf",
             topics = listOf(
                 "Energy Transformation and Conservation of Energy",
@@ -253,7 +253,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-CR-SOC02",
             description = "Examines national economic development, human resource management, population issues, and science in society.",
             fileSizeFormatted = "4.3 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/social-studies-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Social-Studies-LM-Y2-LV.pdf",
             fileName = "GES_SHS2_Social_Studies_Syllabus.pdf",
             topics = listOf(
                 "The Role of Science and Technology in National Development",
@@ -283,7 +283,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-CR-MATH03",
             description = "Senior final-year mathematics covering vectors, transformations, matrices, coordinate geometry, and commercial mathematics.",
             fileSizeFormatted = "5.5 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/core-mathematics-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Mathematics_LM_Y3-FINAL-LEARNERS-VERSION.pdf",
             fileName = "GES_SHS3_Core_Mathematics_Syllabus.pdf",
             topics = listOf(
                 "Rigid Motion and Geometric Transformations: Reflection, Rotation, Translation",
@@ -312,7 +312,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-CR-ENG03",
             description = "Mastery of WASSCE Paper 1, Paper 2, and Paper 3 examination techniques, advanced literary analysis, and essay synthesis.",
             fileSizeFormatted = "5.8 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/english-language-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/English-Language_LM_Year-3_-LV.pdf",
             fileName = "GES_SHS3_English_Language_Syllabus.pdf",
             topics = listOf(
                 "Speech Writing, Public Speaking and Debate Formats",
@@ -340,7 +340,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-CR-SCI03",
             description = "Advanced integrated science covering biotechnology, radioactivity, electrical power transmission, and environmental sustainability.",
             fileSizeFormatted = "6.8 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/integrated-science-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/General-Science_LM_Y3_Online_LV.pdf",
             fileName = "GES_SHS3_Integrated_Science_Syllabus.pdf",
             topics = listOf(
                 "Radioactivity and Nuclear Energy: Alpha, Beta, Gamma Radiations",
@@ -369,7 +369,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-CR-SOC03",
             description = "Critical review of international relations, peace-building, regional integration (AU, ECOWAS), and civic responsibilities.",
             fileSizeFormatted = "4.5 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/social-studies-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Social-Studies-LM-Y3-LV.pdf",
             fileName = "GES_SHS3_Social_Studies_Syllabus.pdf",
             topics = listOf(
                 "International Relations and Global Issues: UN, Commonwealth, AU and ECOWAS",
@@ -403,7 +403,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-PHYS01",
             description = "Fundamental physical principles including kinematics, dynamics, scalar/vector quantities, and properties of matter.",
             fileSizeFormatted = "5.8 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/elective-physics-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Elective-Physics-LM-Y1-LV.pdf",
             fileName = "GES_SHS1_Elective_Physics_Syllabus.pdf",
             topics = listOf(
                 "Physical Quantities, Units and Measurement Errors",
@@ -430,7 +430,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-PHYS02",
             description = "Waves, optics, electric fields, direct current circuits, and magnetic effects of electric currents.",
             fileSizeFormatted = "6.2 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/elective-physics-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Elective-Physics-LM-Y2-LV.pdf",
             fileName = "GES_SHS2_Elective_Physics_Syllabus.pdf",
             topics = listOf(
                 "Simple Harmonic Motion (SHM) and Pendulum Oscillations",
@@ -457,7 +457,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-PHYS03",
             description = "Atomic and nuclear physics, quantum phenomena, semiconductors, and modern electronics.",
             fileSizeFormatted = "6.5 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/elective-physics-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Elective-Physics-LM-Y3-LV.pdf",
             fileName = "GES_SHS3_Elective_Physics_Syllabus.pdf",
             topics = listOf(
                 "Photoelectric Effect and Wave-Particle Duality",
@@ -486,7 +486,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-CHEM01",
             description = "Atomic structure, chemical bonding, mole concept, stoichiometry, and states of matter.",
             fileSizeFormatted = "5.6 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/elective-chemistry-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Elective-Chemistry-LM-Y1-LV.pdf",
             fileName = "GES_SHS1_Elective_Chemistry_Syllabus.pdf",
             topics = listOf(
                 "Introduction to Chemistry & Laboratory Safety",
@@ -513,7 +513,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-CHEM02",
             description = "Energetics, reaction kinetics, chemical equilibrium, redox reactions, and introductory organic chemistry.",
             fileSizeFormatted = "6.0 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/elective-chemistry-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Elective-Chemistry-LM-Y2-LV.pdf",
             fileName = "GES_SHS2_Elective_Chemistry_Syllabus.pdf",
             topics = listOf(
                 "Thermochemistry: Enthalpy Changes and Hess's Law",
@@ -540,7 +540,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-CHEM03",
             description = "Advanced organic synthesis, polymers, transition metal chemistry, and environmental chemistry.",
             fileSizeFormatted = "6.4 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/elective-chemistry-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Elective-Chemistry-LM-Y3-LV.pdf",
             fileName = "GES_SHS3_Elective_Chemistry_Syllabus.pdf",
             topics = listOf(
                 "Aromatic Hydrocarbons: Benzene Structure & Reactions",
@@ -569,7 +569,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-BIO01",
             description = "Cellular biology, biological molecules, classification of living organisms, and plant anatomy.",
             fileSizeFormatted = "5.4 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/elective-biology-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Elective-Biology-LM-Y1-LV.pdf",
             fileName = "GES_SHS1_Elective_Biology_Syllabus.pdf",
             topics = listOf(
                 "Cell Structure, Microscopy and Ultrastructure",
@@ -596,7 +596,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-BIO02",
             description = "Transport in living organisms, gaseous exchange, excretion, homeostasis, nervous co-ordination, and ecology.",
             fileSizeFormatted = "5.9 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/elective-biology-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Elective-Biology-LM-Y2-LV.pdf",
             fileName = "GES_SHS2_Elective_Biology_Syllabus.pdf",
             topics = listOf(
                 "Transport Systems in Plants and Mammals",
@@ -623,7 +623,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-BIO03",
             description = "Genetics, molecular biology, evolution, reproduction, and biotechnology applications.",
             fileSizeFormatted = "6.3 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/elective-biology-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Elective-Biology-LM-Y3-LV.pdf",
             fileName = "GES_SHS3_Elective_Biology_Syllabus.pdf",
             topics = listOf(
                 "Reproduction in Plants and Mammals",
@@ -652,7 +652,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-EMATH01",
             description = "Advanced algebra, set theory, functions, polynomials, and introductory coordinate geometry.",
             fileSizeFormatted = "5.2 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/elective-mathematics-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Additional-Maths-LM-Y1-LV.pdf",
             fileName = "GES_SHS1_Elective_Mathematics_Syllabus.pdf",
             topics = listOf(
                 "Sets, Binary Operations and Algebraic Structures",
@@ -679,7 +679,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-EMATH02",
             description = "Differential and integral calculus, trigonometry, vectors in 3D, and mechanics.",
             fileSizeFormatted = "5.8 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/elective-mathematics-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Additional-Maths-LM-Y2-LV.pdf",
             fileName = "GES_SHS2_Elective_Mathematics_Syllabus.pdf",
             topics = listOf(
                 "Trigonometric Identities, Equations and Compound Angles",
@@ -706,7 +706,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-EMATH03",
             description = "Advanced mechanics, statistics, probability distributions, matrices, and linear transformation.",
             fileSizeFormatted = "6.1 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/elective-mathematics-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Additional-Maths-LM-Y3-LV.pdf",
             fileName = "GES_SHS3_Elective_Mathematics_Syllabus.pdf",
             topics = listOf(
                 "Mechanics: Statics, Equilibrium of Rigid Bodies & Moments",
@@ -739,7 +739,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-ECON01",
             description = "Basic economic concepts, price theory, demand and supply, elasticities, and production.",
             fileSizeFormatted = "4.8 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/economics-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Economics-LM-Y1-LV.pdf",
             fileName = "GES_SHS1_Economics_Syllabus.pdf",
             topics = listOf(
                 "Introduction to Economics: Scarcity, Choice and Scale of Preference",
@@ -766,7 +766,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-ECON02",
             description = "Market structures, national income accounting, money and banking, and public finance.",
             fileSizeFormatted = "5.3 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/economics-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Economics-LM-Y2-LV.pdf",
             fileName = "GES_SHS2_Economics_Syllabus.pdf",
             topics = listOf(
                 "Market Structures: Perfect Competition, Monopoly, Oligopoly",
@@ -793,7 +793,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-ECON03",
             description = "International trade, balance of payments, economic integration (ECOWAS, AfCFTA), and economic planning.",
             fileSizeFormatted = "5.7 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/economics-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Economics-LM-Y3-LV.pdf",
             fileName = "GES_SHS3_Economics_Syllabus.pdf",
             topics = listOf(
                 "International Trade: Comparative Advantage and Protectionism",
@@ -822,7 +822,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-GEOG01",
             description = "Earth as a planet, map reading fundamentals, landforms, rocks, and weathering.",
             fileSizeFormatted = "5.1 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/geography-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Geography-LM-Y1-LV.pdf",
             fileName = "GES_SHS1_Geography_Syllabus.pdf",
             topics = listOf(
                 "The Earth and Solar System: Latitude, Longitude and Time",
@@ -849,7 +849,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-GEOG02",
             description = "Climatology, vegetation zones, soil formation, regional geography of West Africa, and settlement geography.",
             fileSizeFormatted = "5.6 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/geography-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Geography-LM-Y2-LV.pdf",
             fileName = "GES_SHS2_Geography_Syllabus.pdf",
             topics = listOf(
                 "Weather and Climate: Temperature, Pressure, Winds & Rainfall",
@@ -876,7 +876,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-GEOG03",
             description = "Geography of Ghana: Relief, drainage, agriculture, mining, industrialization, and environmental management.",
             fileSizeFormatted = "6.0 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/geography-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Geography-LM-Y3-LV.pdf",
             fileName = "GES_SHS3_Geography_Syllabus.pdf",
             topics = listOf(
                 "Geography of Ghana: Physical Setting, Relief and Drainage",
@@ -906,7 +906,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-GOV01",
             description = "Concepts of state, sovereignty, rule of law, constitutions, organs of government, and political ideologies.",
             fileSizeFormatted = "4.5 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/government-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Government-LM-Y1-LV.pdf",
             fileName = "GES_SHS1_Government_Syllabus.pdf",
             topics = listOf(
                 "Meaning, Scope and Importance of Government",
@@ -933,7 +933,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-GOV02",
             description = "Political development in West Africa, pre-colonial systems, colonial administration, and constitutional developments in Ghana.",
             fileSizeFormatted = "5.0 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/government-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Government-LM-Y2-LV.pdf",
             fileName = "GES_SHS2_Government_Syllabus.pdf",
             topics = listOf(
                 "Pre-Colonial Political Systems in Ghana (Akan, Northern States)",
@@ -960,7 +960,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-GOV03",
             description = "Post-independence Ghana constitutions (1960, 1969, 1979, 1992), local government, foreign policy, and international organizations.",
             fileSizeFormatted = "5.4 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/government-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Government-LM-Y3-LV.pdf",
             fileName = "GES_SHS3_Government_Syllabus.pdf",
             topics = listOf(
                 "Post-Independence Constitutions: The 1992 Fourth Republican Constitution",
@@ -989,7 +989,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-LIT01",
             description = "Literary genres, literary devices, poetic techniques, and analysis of prescribed African prose and drama.",
             fileSizeFormatted = "4.2 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/literature-in-english-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Literature-in-English-LM-Y1-LV.pdf",
             fileName = "GES_SHS1_Literature_In_English_Syllabus.pdf",
             topics = listOf(
                 "Introduction to Literary Genres: Drama, Prose and Poetry",
@@ -1016,7 +1016,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-LIT02",
             description = "In-depth study of prescribed Non-African prose, Shakespearean drama, and Non-African poetry.",
             fileSizeFormatted = "4.7 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/literature-in-english-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Literature-in-English-LM-Y2-LV.pdf",
             fileName = "GES_SHS2_Literature_In_English_Syllabus.pdf",
             topics = listOf(
                 "Analysis of Prescribed Non-African Drama (Shakespearean Text)",
@@ -1043,7 +1043,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-LIT03",
             description = "Comprehensive review of all WASSCE prescribed texts, unseen prose and poetry, and literary essay mastery.",
             fileSizeFormatted = "5.1 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/literature-in-english-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Literature-in-English-LM-Y3-LV.pdf",
             fileName = "GES_SHS3_Literature_In_English_Syllabus.pdf",
             topics = listOf(
                 "Unseen Prose and Poetry Analysis Techniques",
@@ -1076,7 +1076,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-FA01",
             description = "Bookkeeping principles, double-entry system, trial balance, and preparation of final accounts for sole traders.",
             fileSizeFormatted = "5.0 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/financial-accounting-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Accounting_LM_Y1_Online_LV.pdf",
             fileName = "GES_SHS1_Financial_Accounting_Syllabus.pdf",
             topics = listOf(
                 "Introduction to Accounting & Accounting Equation",
@@ -1103,7 +1103,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-FA02",
             description = "Bank reconciliation, control accounts, correction of errors, partnership accounts, and non-profit organization accounts.",
             fileSizeFormatted = "5.5 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/financial-accounting-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Accounting_LM_Y2_Online_LV.pdf",
             fileName = "GES_SHS2_Financial_Accounting_Syllabus.pdf",
             topics = listOf(
                 "Bank Reconciliation Statements",
@@ -1130,7 +1130,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-FA03",
             description = "Company accounts, manufacturing accounts, departmental accounts, ratio analysis, and auditing basics.",
             fileSizeFormatted = "5.9 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/financial-accounting-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Accounting_LM_Y3_Online_LV.pdf",
             fileName = "GES_SHS3_Financial_Accounting_Syllabus.pdf",
             topics = listOf(
                 "Limited Liability Company Accounts: Shares, Debentures and Dividends",
@@ -1159,7 +1159,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-BM01",
             description = "Foundations of business environment, business ownership forms, functions of management, and organizational structure.",
             fileSizeFormatted = "4.6 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/business-management-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Business-Management-LM-Y1-LV.pdf",
             fileName = "GES_SHS1_Business_Management_Syllabus.pdf",
             topics = listOf(
                 "Nature and Purpose of Business Environment",
@@ -1186,7 +1186,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-BM02",
             description = "Human resource management, marketing management, production management, and financial management.",
             fileSizeFormatted = "5.1 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/business-management-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Business-Management-LM-Y2-LV.pdf",
             fileName = "GES_SHS2_Business_Management_Syllabus.pdf",
             topics = listOf(
                 "Human Resource Management: Recruitment, Selection, Training & Motivation",
@@ -1213,7 +1213,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-BM03",
             description = "International business, risk management, insurance, entrepreneurship, and strategic planning.",
             fileSizeFormatted = "5.4 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/business-management-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Business-Management-LM-Y3-LV.pdf",
             fileName = "GES_SHS3_Business_Management_Syllabus.pdf",
             topics = listOf(
                 "International Business and Foreign Trade Procedures",
@@ -1242,7 +1242,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-ICT01",
             description = "Computer hardware architecture, operating systems, word processing, spreadsheets, and information security.",
             fileSizeFormatted = "5.5 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/elective-ict-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/ICT-YEAR-1-LV-ONLINE.pdf",
             fileName = "GES_SHS1_Elective_ICT_Syllabus.pdf",
             topics = listOf(
                 "Computer Architecture: CPU, Memory, Input/Output Devices",
@@ -1269,7 +1269,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-ICT02",
             description = "Database management systems (DBMS), computer networking, web design (HTML/CSS), and algorithm design.",
             fileSizeFormatted = "6.0 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/elective-ict-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/ICT-YEAR-2-LV-ONLINE.pdf",
             fileName = "GES_SHS2_Elective_ICT_Syllabus.pdf",
             topics = listOf(
                 "Database Management Systems (MS Access / MySQL): Tables, Queries & Forms",
@@ -1296,7 +1296,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-ICT03",
             description = "Computer programming (VB.NET / Python fundamentals), data structures, technology impact, and WASSCE practical drills.",
             fileSizeFormatted = "6.4 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/elective-ict-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/ICT-YEAR-3-LV-ONLINE.pdf",
             fileName = "GES_SHS3_Elective_ICT_Syllabus.pdf",
             topics = listOf(
                 "Introduction to Computer Programming: Variables, Control Structures",
@@ -1329,7 +1329,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-GKA01",
             description = "Art history, Ghanaian traditional arts, elements and principles of design, and basic studio safety.",
             fileSizeFormatted = "4.5 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/general-knowledge-in-art-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/General-Knowledge-in-Art-LM-Y1-LV.pdf",
             fileName = "GES_SHS1_General_Knowledge_In_Art_Syllabus.pdf",
             topics = listOf(
                 "Definition, Scope and Functions of Art in Society",
@@ -1356,7 +1356,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-GKA02",
             description = "African art history, Renaissance art, art appreciation, criticism, and museum studies.",
             fileSizeFormatted = "5.0 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/general-knowledge-in-art-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/General-Knowledge-in-Art-LM-Y2-LV.pdf",
             fileName = "GES_SHS2_General_Knowledge_In_Art_Syllabus.pdf",
             topics = listOf(
                 "Traditional African Art: Nok, Benin Bronzes, Asante Goldweights",
@@ -1383,7 +1383,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-GKA03",
             description = "Contemporary Ghanaian artists, art entrepreneurship, portfolio creation, and WASSCE practical project drills.",
             fileSizeFormatted = "5.3 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/general-knowledge-in-art-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/General-Knowledge-in-Art-LM-Y3-LV.pdf",
             fileName = "GES_SHS3_General_Knowledge_In_Art_Syllabus.pdf",
             topics = listOf(
                 "Contemporary Ghanaian Visual Artists and Pioneers (El Anatsui, Ablade Glover)",
@@ -1411,7 +1411,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-GD01",
             description = "Lettering techniques, calligraphy, layout design, poster design, and color application in graphics.",
             fileSizeFormatted = "4.8 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/graphic-design-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Graphic-Design-LM-Y1-LV.pdf",
             fileName = "GES_SHS1_Graphic_Design_Syllabus.pdf",
             topics = listOf(
                 "Introduction to Graphic Design & Visual Communication",
@@ -1438,7 +1438,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-GD02",
             description = "Corporate identity design (logos, letterheads), package design, printmaking, and digital graphic software.",
             fileSizeFormatted = "5.4 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/graphic-design-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Graphic-Design-LM-Y2-LV.pdf",
             fileName = "GES_SHS2_Graphic_Design_Syllabus.pdf",
             topics = listOf(
                 "Corporate Identity Design: Logos, Letterheads, Business Cards",
@@ -1465,7 +1465,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-GD03",
             description = "Advertising design campaigns, digital publishing, portfolio review, and WASSCE timed practical drills.",
             fileSizeFormatted = "5.8 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/graphic-design-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Graphic-Design-LM-Y3-LV.pdf",
             fileName = "GES_SHS3_Graphic_Design_Syllabus.pdf",
             topics = listOf(
                 "Advertising Campaigns: Billboards, Brochures, Flyers, Digital Banners",
@@ -1497,7 +1497,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-FN01",
             description = "Nutrients, balanced diets, kitchen equipment, food hygiene, and basic culinary methods.",
             fileSizeFormatted = "4.7 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/food-and-nutrition-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Food-and-Nutrition-LM-Y1-LV.pdf",
             fileName = "GES_SHS1_Food_And_Nutrition_Syllabus.pdf",
             topics = listOf(
                 "Introduction to Food & Nutrition & Kitchen Safety",
@@ -1524,7 +1524,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-FN02",
             description = "Experimental cookery, special diets, food preservation techniques, catering, and meal service.",
             fileSizeFormatted = "5.2 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/food-and-nutrition-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Food-and-Nutrition-LM-Y2-LV.pdf",
             fileName = "GES_SHS2_Food_And_Nutrition_Syllabus.pdf",
             topics = listOf(
                 "Diets for Special Groups: Diabetics, Hypertensives, Convalescents & Elderly",
@@ -1551,7 +1551,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-FN03",
             description = "Large-scale catering, consumer education, food laws, and WASSCE practical examination drills.",
             fileSizeFormatted = "5.6 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/food-and-nutrition-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Food-and-Nutrition-LM-Y3-LV.pdf",
             fileName = "GES_SHS3_Food_And_Nutrition_Syllabus.pdf",
             topics = listOf(
                 "Large-Scale Catering and Quantity Food Preparation",
@@ -1579,7 +1579,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-MIL01",
             description = "Family life, values, goals, resource management, housing, and interior decoration basics.",
             fileSizeFormatted = "4.4 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/management-in-living-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Management-in-Living-LM-Y1-LV.pdf",
             fileName = "GES_SHS1_Management_In_Living_Syllabus.pdf",
             topics = listOf(
                 "Concept and Scope of Management in Living",
@@ -1606,7 +1606,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-MIL02",
             description = "Consumer education, household budgeting, work simplification, child development, and sanitation.",
             fileSizeFormatted = "4.9 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/management-in-living-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Management-in-Living-LM-Y2-LV.pdf",
             fileName = "GES_SHS2_Management_In_Living_Syllabus.pdf",
             topics = listOf(
                 "Consumer Education: Rights, Responsibilities and Wise Shopping",
@@ -1633,7 +1633,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-MIL03",
             description = "Marriage laws, family crisis management, elderly care, community development, and WASSCE essay drills.",
             fileSizeFormatted = "5.2 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/management-in-living-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/Management-in-Living-LM-Y3-LV.pdf",
             fileName = "GES_SHS3_Management_In_Living_Syllabus.pdf",
             topics = listOf(
                 "Marriage Laws, Customary Marriage & Ordinance Marriage in Ghana",
@@ -1665,7 +1665,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-AGRIC01",
             description = "Role of agriculture, land tenure systems, farm mechanization, soil science, and crop production fundamentals.",
             fileSizeFormatted = "5.0 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year1/general-agriculture-shs1-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/General-Agriculture-LM-Y1-LV.pdf",
             fileName = "GES_SHS1_General_Agriculture_Syllabus.pdf",
             topics = listOf(
                 "Importance of Agriculture to National Economy in Ghana",
@@ -1692,7 +1692,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-AGRIC02",
             description = "Crop protection, weed control, livestock anatomy, animal nutrition, and agricultural economics.",
             fileSizeFormatted = "5.6 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year2/general-agriculture-shs2-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/General-Agriculture-LM-Y2-LV.pdf",
             fileName = "GES_SHS2_General_Agriculture_Syllabus.pdf",
             topics = listOf(
                 "Crop Protection: Pests, Diseases and Integrated Pest Management (IPM)",
@@ -1719,7 +1719,7 @@ object CurriculumRepository {
             curriculumCode = "GES/NaCCA/SHS-EL-AGRIC03",
             description = "Animal breeding, pasture management, agricultural extension, agribusiness, and WASSCE practical drills.",
             fileSizeFormatted = "6.0 MB",
-            downloadUrl = "https://curriculumresources.edu.gh/ges/shs/year3/general-agriculture-shs3-curriculum.pdf",
+            downloadUrl = "https://curriculumresources.edu.gh/wp-content/uploads/2026/09/General-Agriculture-LM-Y3-LV.pdf",
             fileName = "GES_SHS3_General_Agriculture_Syllabus.pdf",
             topics = listOf(
                 "Animal Breeding, Genetics and Artificial Insemination",

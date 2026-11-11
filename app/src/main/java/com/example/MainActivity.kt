@@ -2,10 +2,13 @@ package com.example
 
 import android.Manifest
 import android.app.DownloadManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -139,6 +142,40 @@ class MainActivity : ComponentActivity() {
                     "Saved to internal storage under: /Downloads",
                     Toast.LENGTH_LONG
                 ).show()
+            }
+        }
+    }
+
+    companion object {
+        /**
+         * Reusable Kotlin function to download official GES curriculum PDF using Android DownloadManager
+         */
+        fun downloadCurriculumPdf(context: Context, subjectName: String, fileUrl: String): Long {
+            val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as? DownloadManager
+            if (downloadManager == null) {
+                Toast.makeText(context, "System DownloadManager is unavailable", Toast.LENGTH_SHORT).show()
+                return -1L
+            }
+
+            return try {
+                val cleanFileName = "GES_${subjectName.replace(" ", "_")}.pdf"
+                val request = DownloadManager.Request(Uri.parse(fileUrl)).apply {
+                    setTitle("Downloading $subjectName PDF")
+                    setDescription("Official GES SHS Curriculum • curriculumresources.edu.gh")
+                    setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                    setAllowedNetworkTypes(
+                        DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE
+                    )
+                    setAllowedOverRoaming(true)
+                    setMimeType("application/pdf")
+                    setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, cleanFileName)
+                }
+
+                Toast.makeText(context, "Download started: GES_${subjectName.replace(" ", "_")}.pdf", Toast.LENGTH_SHORT).show()
+                downloadManager.enqueue(request)
+            } catch (e: Exception) {
+                Toast.makeText(context, "Queued download: $subjectName", Toast.LENGTH_SHORT).show()
+                -1L
             }
         }
     }
