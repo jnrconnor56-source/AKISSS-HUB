@@ -18,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Verified
@@ -28,7 +29,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -57,7 +58,8 @@ fun CurriculumDetailDialog(
     downloadState: DownloadState,
     onDismiss: () -> Unit,
     onDownloadClick: () -> Unit,
-    onOpenClick: () -> Unit
+    onOpenClick: () -> Unit,
+    onOpenBrowserClick: () -> Unit
 ) {
     Dialog(
         onDismissRequest = onDismiss,
@@ -111,7 +113,7 @@ fun CurriculumDetailDialog(
                                 color = TextPrimary
                             )
                             Text(
-                                text = "Year ${subject.year} Core Curriculum",
+                                text = "Year ${subject.year} ${subject.courseTrack.displayName}",
                                 fontSize = 12.sp,
                                 color = AkisssBlue,
                                 fontWeight = FontWeight.SemiBold
@@ -151,7 +153,7 @@ fun CurriculumDetailDialog(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "GES & NaCCA Accredited National Teaching Syllabus",
+                            text = "GES & NaCCA Accredited Syllabus • curriculumresources.edu.gh",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = EducationGreen
@@ -264,49 +266,80 @@ fun CurriculumDetailDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Download / Open action
-                if (downloadState == DownloadState.COMPLETED) {
-                    Button(
-                        onClick = {
-                            onDismiss()
-                            onOpenClick()
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = EducationGreen)
-                    ) {
-                        Text(
-                            text = "Open PDF from Downloads",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp,
-                            color = Color.White
-                        )
+                // Dual Action Buttons: Native Download + Browser Link
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    if (downloadState == DownloadState.COMPLETED) {
+                        Button(
+                            onClick = {
+                                onDismiss()
+                                onOpenClick()
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = EducationGreen)
+                        ) {
+                            Text(
+                                text = "Open PDF from Downloads",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                color = Color.White
+                            )
+                        }
+                    } else {
+                        Button(
+                            onClick = {
+                                onDismiss()
+                                onDownloadClick()
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = AkisssBlue)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Download,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Download PDF (${subject.fileSizeFormatted})",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                color = Color.White
+                            )
+                        }
                     }
-                } else {
-                    Button(
+
+                    // Direct Web Browser Link Button
+                    OutlinedButton(
                         onClick = {
                             onDismiss()
-                            onDownloadClick()
+                            onOpenBrowserClick()
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(48.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = AkisssBlue)
+                            .height(44.dp),
+                        shape = RoundedCornerShape(12.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Download,
+                            imageVector = Icons.Default.Language,
                             contentDescription = null,
+                            tint = AkisssBlue,
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Download Official PDF (${subject.fileSizeFormatted})",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp,
-                            color = Color.White
+                            text = "Open Link on curriculumresources.edu.gh",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = AkisssBlue
                         )
                     }
                 }

@@ -440,7 +440,8 @@ fun AkisssMainScreen(
             downloadState = state,
             onDismiss = { viewModel.selectSubjectForDetail(null) },
             onDownloadClick = { viewModel.downloadSubjectPdf(subject) },
-            onOpenClick = { viewModel.openSubjectPdf(subject) }
+            onOpenClick = { viewModel.openSubjectPdf(subject) },
+            onOpenBrowserClick = { viewModel.openSubjectUrlInBrowser(subject) }
         )
     }
 }

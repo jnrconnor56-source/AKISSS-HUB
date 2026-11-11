@@ -124,6 +124,10 @@ class AkisssViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun openSubjectUrlInBrowser(subject: SubjectItem) {
+        downloadManager.openUrlInBrowser(subject.downloadUrl)
+    }
+
     fun refreshDownloadedFilesStatus() {
         viewModelScope.launch {
             val states = mutableMapOf<String, DownloadState>()
