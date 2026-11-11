@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AKISSS Student Hub</string>
+    <string name="app_subtitle">Official GES SHS Curriculum Center</string>
+    <string name="tab_year_1">Year 1 (SHS 1)</string>
+    <string name="tab_year_2">Year 2 (SHS 2)</string>
+    <string name="tab_year_3">Year 3 (SHS 3)</string>
+
+    <string name="school_name">Akim Swedru Senior High School</string>
+    <string name="school_motto">Anansekrom • Excellence in Discipline &amp; Scholarship</string>
+
+    <string name="btn_download_pdf">Download PDF</string>
+    <string name="btn_open_pdf">Open PDF</string>
+    <string name="btn_view_details">Curriculum Outline</string>
+    <string name="status_downloading">Downloading…</string>
+    <string name="status_downloaded">Saved to Downloads</string>
+
+    <string name="download_started_msg">Download started: %1$s syllabus PDF</string>
+    <string name="download_complete_msg">Download complete: %1$s saved to device Downloads</string>
+    <string name="download_failed_msg">Download failed for %1$s. Check internet connection.</string>
+
+    <string name="source_domain">curriculumresources.edu.gh</string>
+    <string name="downloads_directory_label">Saved to /Downloads</string>
+    <string name="search_hint">Search core subjects or topics…</string>
+</resources>

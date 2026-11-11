@@ -1,0 +1,6 @@
+{
+  "name": "AKISSS Student Hub",
+  "description": "Official GES SHS Curriculum Center and Core Subjects Hub for Senior High School students in Ghana.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
