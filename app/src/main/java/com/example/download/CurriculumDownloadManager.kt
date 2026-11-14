@@ -13,22 +13,34 @@ import android.os.Build
 import android.os.Environment
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import com.example.data.DownloadState
 import com.example.data.SubjectItem
 import java.io.File
 import java.io.FileOutputStream
+import java.util.concurrent.ConcurrentHashMap
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CurriculumDownloadManager(private val context: Context) {
 
     private val downloadManager: DownloadManager? =
         context.getSystemService(Context.DOWNLOAD_SERVICE) as? DownloadManager
 
-    // Map download ID to SubjectItem for broadcast tracking
-    private val activeDownloads = mutableMapOf<Long, SubjectItem>()
+    private val managerScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    // Listeners for UI state update
+    // Thread-safe map of download ID to SubjectItem for broadcast tracking
+    private val activeDownloads = ConcurrentHashMap<Long, SubjectItem>()
+
+    // Listeners for UI state update (invoked on Main thread)
     var onDownloadStarted: ((SubjectItem) -> Unit)? = null
     var onDownloadCompleted: ((SubjectItem, File?) -> Unit)? = null
     var onDownloadFailed: ((SubjectItem, String) -> Unit)? = null
+
+    private var isReceiverRegistered = false
 
     private val downloadReceiver = object : BroadcastReceiver() {
         override fun onReceive(recvContext: Context?, intent: Intent?) {
@@ -37,7 +49,9 @@ class CurriculumDownloadManager(private val context: Context) {
                 if (downloadId != -1L) {
                     val subject = activeDownloads.remove(downloadId)
                     if (subject != null) {
-                        checkDownloadStatus(downloadId, subject)
+                        managerScope.launch {
+                            checkDownloadStatusAsync(downloadId, subject)
+                        }
                     }
                 }
             }
@@ -45,20 +59,26 @@ class CurriculumDownloadManager(private val context: Context) {
     }
 
     fun registerReceiver() {
+        if (isReceiverRegistered) return
         val filter = IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.registerReceiver(downloadReceiver, filter, Context.RECEIVER_EXPORTED)
         } else {
             context.registerReceiver(downloadReceiver, filter)
         }
+        isReceiverRegistered = true
     }
 
     fun unregisterReceiver() {
-        try {
-            context.unregisterReceiver(downloadReceiver)
-        } catch (_: Exception) {
-            // Receiver might not be registered
+        if (isReceiverRegistered) {
+            try {
+                context.unregisterReceiver(downloadReceiver)
+            } catch (_: Exception) {
+                // Receiver might not be registered
+            }
+            isReceiverRegistered = false
         }
+        managerScope.cancel()
     }
 
     /**
@@ -76,94 +96,120 @@ class CurriculumDownloadManager(private val context: Context) {
     }
 
     /**
-     * Enqueues native DownloadManager request, with fallback to native PDF generator
+     * Enqueues native DownloadManager request off the UI thread, with fallback to native PDF generator
      * if network or server is unreachable.
      */
-    fun enqueueDownload(subject: SubjectItem): Long {
-        onDownloadStarted?.invoke(subject)
+    suspend fun enqueueDownloadAsync(subject: SubjectItem): Long {
+        withContext(Dispatchers.Main) {
+            onDownloadStarted?.invoke(subject)
+        }
 
         if (downloadManager == null) {
-            val file = generateOfficialSyllabusPdf(subject)
-            if (file != null && file.exists()) {
-                Toast.makeText(context, "Saved official syllabus PDF to Downloads", Toast.LENGTH_LONG).show()
-                onDownloadCompleted?.invoke(subject, file)
-                return 1000L
-            } else {
-                val err = "Could not generate PDF on device storage."
-                Toast.makeText(context, err, Toast.LENGTH_LONG).show()
-                onDownloadFailed?.invoke(subject, err)
-                return -1L
+            val file = withContext(Dispatchers.IO) { generateOfficialSyllabusPdf(subject) }
+            return withContext(Dispatchers.Main) {
+                if (file != null && file.exists()) {
+                    Toast.makeText(context, "Saved official syllabus PDF to Downloads", Toast.LENGTH_LONG).show()
+                    onDownloadCompleted?.invoke(subject, file)
+                    1000L
+                } else {
+                    val err = "Could not generate PDF on device storage."
+                    Toast.makeText(context, err, Toast.LENGTH_LONG).show()
+                    onDownloadFailed?.invoke(subject, err)
+                    -1L
+                }
             }
         }
 
-        try {
-            val downloadUri = Uri.parse(subject.downloadUrl)
+        return try {
+            val downloadId = withContext(Dispatchers.IO) {
+                val downloadUri = Uri.parse(subject.downloadUrl)
+                val request = DownloadManager.Request(downloadUri).apply {
+                    setTitle("${subject.title} (Year ${subject.year})")
+                    setDescription("Official GES SHS Curriculum • curriculumresources.edu.gh")
+                    setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                    setAllowedNetworkTypes(
+                        DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE
+                    )
+                    setAllowedOverRoaming(true)
+                    setMimeType("application/pdf")
+                    setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, subject.fileName)
+                }
 
-            val request = DownloadManager.Request(downloadUri).apply {
-                setTitle("${subject.title} (Year ${subject.year})")
-                setDescription("Official GES SHS Curriculum • curriculumresources.edu.gh")
-                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                setAllowedNetworkTypes(
-                    DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE
-                )
-                setAllowedOverRoaming(true)
-                setMimeType("application/pdf")
-                setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, subject.fileName)
+                val id = downloadManager.enqueue(request)
+                activeDownloads[id] = subject
+                id
             }
 
-            val downloadId = downloadManager.enqueue(request)
-            activeDownloads[downloadId] = subject
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, "Download started from curriculumresources.edu.gh...", Toast.LENGTH_SHORT).show()
+            }
 
-            val startMessage = "Download started from curriculumresources.edu.gh..."
-            Toast.makeText(context, startMessage, Toast.LENGTH_SHORT).show()
-
-            return downloadId
+            downloadId
         } catch (e: Exception) {
-            // Fallback: Generate valid official PDF file directly to Downloads
-            val file = generateOfficialSyllabusPdf(subject)
-            if (file != null && file.exists()) {
-                val completeMsg = "Download complete: ${subject.title} saved to Downloads"
-                Toast.makeText(context, completeMsg, Toast.LENGTH_LONG).show()
-                onDownloadCompleted?.invoke(subject, file)
-                return 2000L
-            } else {
-                val failureMsg = "Download error: ${e.localizedMessage ?: "Storage error"}"
-                Toast.makeText(context, failureMsg, Toast.LENGTH_LONG).show()
-                onDownloadFailed?.invoke(subject, failureMsg)
-                return -1L
+            // Fallback: Generate valid official PDF file directly to Downloads on IO dispatcher
+            val file = withContext(Dispatchers.IO) { generateOfficialSyllabusPdf(subject) }
+            withContext(Dispatchers.Main) {
+                if (file != null && file.exists()) {
+                    val completeMsg = "Download complete: ${subject.title} saved to Downloads"
+                    Toast.makeText(context, completeMsg, Toast.LENGTH_LONG).show()
+                    onDownloadCompleted?.invoke(subject, file)
+                    2000L
+                } else {
+                    val failureMsg = "Download error: ${e.localizedMessage ?: "Storage error"}"
+                    Toast.makeText(context, failureMsg, Toast.LENGTH_LONG).show()
+                    onDownloadFailed?.invoke(subject, failureMsg)
+                    -1L
+                }
             }
         }
     }
 
-    private fun checkDownloadStatus(downloadId: Long, subject: SubjectItem) {
-        val query = DownloadManager.Query().setFilterById(downloadId)
-        val cursor = downloadManager?.query(query)
-        var isSuccessful = false
-
-        if (cursor != null && cursor.moveToFirst()) {
-            val statusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
-            if (statusIndex != -1) {
-                val status = cursor.getInt(statusIndex)
-                if (status == DownloadManager.STATUS_SUCCESSFUL) {
-                    val file = getDownloadedFile(subject)
-                    if (file != null && file.exists() && file.length() > 0) {
-                        isSuccessful = true
-                        val completeMessage = "Download complete: ${subject.title} saved to Downloads"
-                        Toast.makeText(context, completeMessage, Toast.LENGTH_LONG).show()
-                        onDownloadCompleted?.invoke(subject, file)
+    private suspend fun checkDownloadStatusAsync(downloadId: Long, subject: SubjectItem) {
+        val downloadedFile: File? = withContext(Dispatchers.IO) {
+            var verifiedFile: File? = null
+            val query = DownloadManager.Query().setFilterById(downloadId)
+            val cursor = downloadManager?.query(query)
+            if (cursor != null) {
+                cursor.use {
+                    if (it.moveToFirst()) {
+                        val statusIndex = it.getColumnIndex(DownloadManager.COLUMN_STATUS)
+                        if (statusIndex != -1 && it.getInt(statusIndex) == DownloadManager.STATUS_SUCCESSFUL) {
+                            val file = getDownloadedFile(subject)
+                            if (file != null && file.exists() && file.length() > 0) {
+                                verifiedFile = file
+                            }
+                        }
                     }
                 }
             }
-            cursor.close()
+            verifiedFile
         }
 
-        if (!isSuccessful) {
-            // Server or network error occurred during DownloadManager task -> execute PDF generator fallback
-            val file = generateOfficialSyllabusPdf(subject)
-            if (file != null && file.exists()) {
-                val completeMsg = "Download complete: ${subject.title} saved to Downloads"
-                Toast.makeText(context, completeMsg, Toast.LENGTH_LONG).show()
-                onDownloadCompleted?.invoke(subject, file)
+        if (downloadedFile != null) {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(
+                    context,
+                    "Download complete: ${subject.title} saved to Downloads",
+                    Toast.LENGTH_LONG
+                ).show()
+                onDownloadCompleted?.invoke(subject, downloadedFile)
+            }
+            return
+        }
+
+        // Server or network error occurred during DownloadManager task -> execute PDF generator fallback on IO
+        val fallbackFile = withContext(Dispatchers.IO) {
+            generateOfficialSyllabusPdf(subject)
+        }
+
+        withContext(Dispatchers.Main) {
+            if (fallbackFile != null && fallbackFile.exists()) {
+                Toast.makeText(
+                    context,
+                    "Download complete: ${subject.title} saved to Downloads",
+                    Toast.LENGTH_LONG
+                ).show()
+                onDownloadCompleted?.invoke(subject, fallbackFile)
             } else {
                 val errorMsg = "Could not download or generate syllabus PDF."
                 Toast.makeText(context, errorMsg, Toast.LENGTH_LONG).show()
@@ -171,6 +217,35 @@ class CurriculumDownloadManager(private val context: Context) {
             }
         }
     }
+
+    /**
+     * Batch-checks download states on Dispatchers.IO without blocking the Main thread
+     */
+    suspend fun checkAllDownloadStatesAsync(subjects: List<SubjectItem>): Map<String, DownloadState> =
+        withContext(Dispatchers.IO) {
+            val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            val internalDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+
+            val publicFiles = downloadsDir?.list()?.toHashSet() ?: emptySet()
+            val internalFiles = internalDir?.list()?.toHashSet() ?: emptySet()
+
+            val states = HashMap<String, DownloadState>(subjects.size)
+            for (subject in subjects) {
+                val existsPublic = publicFiles.contains(subject.fileName) &&
+                    File(downloadsDir, subject.fileName).length() > 0
+                val existsInternal = !existsPublic &&
+                    internalFiles.contains(subject.fileName) &&
+                    internalDir != null &&
+                    File(internalDir, subject.fileName).length() > 0
+
+                states[subject.id] = if (existsPublic || existsInternal) {
+                    DownloadState.COMPLETED
+                } else {
+                    DownloadState.READY
+                }
+            }
+            states
+        }
 
     /**
      * Generates a fully formatted, official A4 PDF document for the syllabus using Android's native PdfDocument
@@ -240,7 +315,6 @@ class CurriculumDownloadManager(private val context: Context) {
             paint.textSize = 10f
             paint.isFakeBoldText = false
 
-            // Draw description lines
             val descLines = wrapText(subject.description, 85)
             for (line in descLines) {
                 canvas.drawText(line, 30f, yOffset, paint)
@@ -330,7 +404,6 @@ class CurriculumDownloadManager(private val context: Context) {
 
             pdfDocument.finishPage(page)
 
-            // Save PDF File
             val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
             if (!downloadsDir.exists()) {
                 downloadsDir.mkdirs()
@@ -344,7 +417,6 @@ class CurriculumDownloadManager(private val context: Context) {
 
             targetFile
         } catch (e: Exception) {
-            // App internal fallback if public directory is blocked
             try {
                 val internalDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
                 if (internalDir != null) {
@@ -376,9 +448,6 @@ class CurriculumDownloadManager(private val context: Context) {
         return lines
     }
 
-    /**
-     * Checks if the curriculum PDF exists in public Downloads or internal storage
-     */
     fun isFileDownloaded(subject: SubjectItem): Boolean {
         val file = getDownloadedFile(subject)
         return file != null && file.exists() && file.length() > 0
@@ -436,7 +505,6 @@ class CurriculumDownloadManager(private val context: Context) {
             context.startActivity(Intent.createChooser(openIntent, "Open ${subject.title} PDF"))
             true
         } catch (e: Exception) {
-            // Fallback: Launch system Downloads app
             try {
                 val viewDownloadsIntent = Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

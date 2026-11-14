@@ -1,5 +1,8 @@
 package com.example.data
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 enum class CourseTrack(val displayName: String) {
     ALL("All Subjects"),
     CORE("Core Subjects"),
@@ -11,6 +14,7 @@ enum class CourseTrack(val displayName: String) {
     AGRICULTURE("Agricultural Science")
 }
 
+@Immutable
 data class SubjectItem(
     val id: String,
     val title: String,
@@ -28,6 +32,7 @@ data class SubjectItem(
     val pagesCount: Int
 )
 
+@Immutable
 enum class DownloadState {
     READY,
     DOWNLOADING,

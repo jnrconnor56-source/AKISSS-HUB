@@ -1,6 +1,8 @@
 package com.example.ui.components
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,19 +15,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Business
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.FileOpen
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Restaurant
@@ -43,14 +43,17 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -67,6 +70,36 @@ import com.example.ui.theme.TextPrimary
 import com.example.ui.theme.TextSecondary
 import com.example.ui.theme.TextTertiary
 
+@Immutable
+private data class TrackVisualStyle(
+    val bgColor: Color,
+    val textColor: Color,
+    val icon: ImageVector
+)
+
+private val TopicChipShape = RoundedCornerShape(12.dp)
+private val CardShape = RoundedCornerShape(16.dp)
+private val BadgeShape = RoundedCornerShape(6.dp)
+private val IconBoxShape = RoundedCornerShape(12.dp)
+private val ActionButtonShape = RoundedCornerShape(10.dp)
+private val TopicChipColor = Color(0xFFF1F5F9)
+private val TopicTextColor = Color(0xFF334155)
+private val DefaultBorderColor = Color(0xFFE2E8F0)
+private val CompletedBorderColor = EducationGreen.copy(alpha = 0.5f)
+private val OutlineBorderColor = Color(0xFFCBD5E1)
+private val ErrorColor = Color(0xFFDC2626)
+
+private fun trackVisualStyleFor(track: CourseTrack): TrackVisualStyle = when (track) {
+    CourseTrack.CORE -> TrackVisualStyle(AkisssBlueContainer, AkisssBlue, Icons.Default.School)
+    CourseTrack.GENERAL_SCIENCE -> TrackVisualStyle(Color(0xFFECFDF5), EducationGreen, Icons.Default.Science)
+    CourseTrack.GENERAL_ARTS -> TrackVisualStyle(Color(0xFFFEF3C7), GhanaGold, Icons.Default.MenuBook)
+    CourseTrack.BUSINESS -> TrackVisualStyle(Color(0xFFEFF6FF), Color(0xFF1D4ED8), Icons.Default.Business)
+    CourseTrack.VISUAL_ARTS -> TrackVisualStyle(Color(0xFFF3E8FF), Color(0xFF7E22CE), Icons.Default.Palette)
+    CourseTrack.HOME_ECONOMICS -> TrackVisualStyle(Color(0xFFFCE7F3), Color(0xFFBE185D), Icons.Default.Restaurant)
+    CourseTrack.AGRICULTURE -> TrackVisualStyle(Color(0xFFDCFCE7), Color(0xFF15803D), Icons.Default.Eco)
+    CourseTrack.ALL -> TrackVisualStyle(AkisssBlueContainer, AkisssBlue, Icons.Default.School)
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SubjectCard(
@@ -77,39 +110,10 @@ fun SubjectCard(
     onDetailsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
-
-    val trackBg = when (subject.courseTrack) {
-        CourseTrack.CORE -> AkisssBlueContainer
-        CourseTrack.GENERAL_SCIENCE -> Color(0xFFECFDF5)
-        CourseTrack.GENERAL_ARTS -> Color(0xFFFEF3C7)
-        CourseTrack.BUSINESS -> Color(0xFFEFF6FF)
-        CourseTrack.VISUAL_ARTS -> Color(0xFFF3E8FF)
-        CourseTrack.HOME_ECONOMICS -> Color(0xFFFCE7F3)
-        CourseTrack.AGRICULTURE -> Color(0xFFDCFCE7)
-        else -> AkisssBlueContainer
-    }
-
-    val trackTextColor = when (subject.courseTrack) {
-        CourseTrack.CORE -> AkisssBlue
-        CourseTrack.GENERAL_SCIENCE -> EducationGreen
-        CourseTrack.GENERAL_ARTS -> GhanaGold
-        CourseTrack.BUSINESS -> Color(0xFF1D4ED8)
-        CourseTrack.VISUAL_ARTS -> Color(0xFF7E22CE)
-        CourseTrack.HOME_ECONOMICS -> Color(0xFFBE185D)
-        CourseTrack.AGRICULTURE -> Color(0xFF15803D)
-        else -> AkisssBlue
-    }
-
-    val trackIcon = when (subject.courseTrack) {
-        CourseTrack.CORE -> Icons.Default.School
-        CourseTrack.GENERAL_SCIENCE -> Icons.Default.Science
-        CourseTrack.GENERAL_ARTS -> Icons.Default.MenuBook
-        CourseTrack.BUSINESS -> Icons.Default.Business
-        CourseTrack.VISUAL_ARTS -> Icons.Default.Palette
-        CourseTrack.HOME_ECONOMICS -> Icons.Default.Restaurant
-        CourseTrack.AGRICULTURE -> Icons.Default.Eco
-        else -> Icons.Default.School
+    var isExpanded by rememberSaveable(subject.id) { mutableStateOf(false) }
+    val style = remember(subject.courseTrack) { trackVisualStyleFor(subject.courseTrack) }
+    val displayTopics = remember(subject.id, isExpanded) {
+        if (isExpanded) subject.topics else subject.topics.take(3)
     }
 
     Card(
@@ -117,20 +121,23 @@ fun SubjectCard(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 6.dp)
             .testTag("card_${subject.id}"),
-        shape = RoundedCornerShape(16.dp),
+        shape = CardShape,
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp,
-            pressedElevation = 6.dp
-        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         border = BorderStroke(
             width = 1.dp,
-            color = if (downloadState == DownloadState.COMPLETED) EducationGreen.copy(alpha = 0.5f) else Color(0xFFE2E8F0)
+            color = if (downloadState == DownloadState.COMPLETED) CompletedBorderColor else DefaultBorderColor
         )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .animateContentSize(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioNoBouncy,
+                        stiffness = Spring.StiffnessMediumLow
+                    )
+                )
                 .padding(16.dp)
         ) {
             // Header: Subject Icon, Title, Year Badge & Program Track Badge
@@ -138,18 +145,17 @@ fun SubjectCard(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Leading Badge
                 Box(
                     modifier = Modifier
                         .size(46.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(trackBg),
+                        .clip(IconBoxShape)
+                        .background(style.bgColor),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = trackIcon,
+                        imageVector = style.icon,
                         contentDescription = subject.title,
-                        tint = trackTextColor,
+                        tint = style.textColor,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -175,14 +181,14 @@ fun SubjectCard(
                         Spacer(modifier = Modifier.width(6.dp))
 
                         Surface(
-                            shape = RoundedCornerShape(6.dp),
-                            color = trackBg
+                            shape = BadgeShape,
+                            color = style.bgColor
                         ) {
                             Text(
                                 text = subject.courseTrack.displayName,
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = trackTextColor,
+                                color = style.textColor,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
                             )
                         }
@@ -228,17 +234,17 @@ fun SubjectCard(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                val displayTopics = if (isExpanded) subject.topics else subject.topics.take(3)
                 displayTopics.forEach { topic ->
-                    Surface(
-                        shape = RoundedCornerShape(12.dp),
-                        color = Color(0xFFF1F5F9)
+                    Box(
+                        modifier = Modifier
+                            .clip(TopicChipShape)
+                            .background(TopicChipColor)
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
                     ) {
                         Text(
                             text = topic,
                             fontSize = 11.sp,
-                            color = Color(0xFF334155),
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                            color = TopicTextColor
                         )
                     }
                 }
@@ -249,14 +255,15 @@ fun SubjectCard(
                         color = AkisssBlue,
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier
+                            .clip(BadgeShape)
                             .clickable { isExpanded = true }
-                            .padding(horizontal = 4.dp, vertical = 2.dp)
+                            .padding(horizontal = 6.dp, vertical = 2.dp)
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
-            HorizontalDivider(color = Color(0xFFF1F5F9))
+            HorizontalDivider(color = TopicChipColor)
             Spacer(modifier = Modifier.height(10.dp))
 
             // Meta Row: File size, source domain, and download status
@@ -271,7 +278,6 @@ fun SubjectCard(
                     color = TextTertiary
                 )
 
-                // Status Badge
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     when (downloadState) {
                         DownloadState.READY -> {
@@ -314,7 +320,7 @@ fun SubjectCard(
                             Icon(
                                 imageVector = Icons.Default.Warning,
                                 contentDescription = "Failed",
-                                tint = Color(0xFFDC2626),
+                                tint = ErrorColor,
                                 modifier = Modifier.size(14.dp)
                             )
                             Spacer(modifier = Modifier.width(4.dp))
@@ -322,7 +328,7 @@ fun SubjectCard(
                                 text = "Retry Needed",
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = Color(0xFFDC2626)
+                                color = ErrorColor
                             )
                         }
                     }
@@ -331,39 +337,37 @@ fun SubjectCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Action Buttons
+            // Action Buttons (48.dp minimum interactive height for smooth tapping)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Secondary action: Curriculum outline & WASSCE guide
                 OutlinedButton(
                     onClick = onDetailsClick,
                     modifier = Modifier
                         .weight(1f)
-                        .height(44.dp)
+                        .heightIn(min = 48.dp)
                         .testTag("outline_button_${subject.id}"),
-                    shape = RoundedCornerShape(10.dp),
-                    border = BorderStroke(1.dp, Color(0xFFCBD5E1))
+                    shape = ActionButtonShape,
+                    border = BorderStroke(1.dp, OutlineBorderColor)
                 ) {
                     Text(
                         text = "Outline & Tips",
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Color(0xFF334155)
+                        color = TopicTextColor
                     )
                 }
 
-                // Primary Action: Download PDF or Open PDF
                 if (downloadState == DownloadState.COMPLETED) {
                     Button(
                         onClick = onOpenClick,
                         modifier = Modifier
                             .weight(1.2f)
-                            .height(44.dp)
+                            .heightIn(min = 48.dp)
                             .testTag("open_button_${subject.id}"),
-                        shape = RoundedCornerShape(10.dp),
+                        shape = ActionButtonShape,
                         colors = ButtonDefaults.buttonColors(containerColor = EducationGreen)
                     ) {
                         Icon(
@@ -385,9 +389,9 @@ fun SubjectCard(
                         enabled = downloadState != DownloadState.DOWNLOADING,
                         modifier = Modifier
                             .weight(1.2f)
-                            .height(44.dp)
+                            .heightIn(min = 48.dp)
                             .testTag("download_button_${subject.id}"),
-                        shape = RoundedCornerShape(10.dp),
+                        shape = ActionButtonShape,
                         colors = ButtonDefaults.buttonColors(containerColor = AkisssBlue)
                     ) {
                         if (downloadState == DownloadState.DOWNLOADING) {

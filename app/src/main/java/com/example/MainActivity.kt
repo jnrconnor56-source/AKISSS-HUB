@@ -17,9 +17,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import com.example.ui.AkisssMainScreen
@@ -52,16 +53,13 @@ class MainActivity : ComponentActivity() {
         // Register system broadcast receiver for native DownloadManager completions
         viewModel.downloadManager.registerReceiver()
 
-        // Check required runtime permissions
-        checkRequiredPermissions()
-
         setContent {
             AkisssTheme {
-                var showSplash by remember { mutableStateOf(true) }
+                var showSplash by rememberSaveable { mutableStateOf(true) }
 
                 Crossfade(
                     targetState = showSplash,
-                    animationSpec = tween(durationMillis = 600),
+                    animationSpec = tween(durationMillis = 350),
                     label = "splash_crossfade"
                 ) { isSplash ->
                     if (isSplash) {
@@ -69,6 +67,9 @@ class MainActivity : ComponentActivity() {
                             onSplashFinished = { showSplash = false }
                         )
                     } else {
+                        LaunchedEffect(Unit) {
+                            checkRequiredPermissions()
+                        }
                         AkisssMainScreen(
                             viewModel = viewModel,
                             onOpenDownloadsFolder = { openDeviceDownloadsFolder() }
@@ -81,7 +82,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Synchronize download statuses with files in Downloads directory
+        // Synchronize download statuses off the main thread
         viewModel.refreshDownloadedFilesStatus()
     }
 
@@ -93,7 +94,6 @@ class MainActivity : ComponentActivity() {
     private fun checkRequiredPermissions() {
         val permissionsToRequest = mutableListOf<String>()
 
-        // Notification permission for Android 13+ (API 33+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
                     this,
@@ -104,7 +104,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // Storage write permission for legacy Android (API <= 28)
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
             if (ContextCompat.checkSelfPermission(
                     this,
@@ -120,9 +119,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /**
-     * Opens the device's native Downloads manager / files app
-     */
     private fun openDeviceDownloadsFolder() {
         try {
             val downloadIntent = Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
@@ -171,7 +167,7 @@ class MainActivity : ComponentActivity() {
                     setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, cleanFileName)
                 }
 
-                Toast.makeText(context, "Download started: GES_${subjectName.replace(" ", "_")}.pdf", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Download started: $cleanFileName", Toast.LENGTH_SHORT).show()
                 downloadManager.enqueue(request)
             } catch (e: Exception) {
                 Toast.makeText(context, "Queued download: $subjectName", Toast.LENGTH_SHORT).show()

@@ -1,34 +1,33 @@
 package com.example.ui
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.DownloadDone
 import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -37,20 +36,20 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,18 +59,29 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.R
 import com.example.data.CourseTrack
 import com.example.data.DownloadState
+import com.example.data.SubjectItem
 import com.example.ui.components.CurriculumDetailDialog
 import com.example.ui.components.SubjectCard
 import com.example.ui.theme.AkisssBlue
 import com.example.ui.theme.AkisssBlueDark
 import com.example.ui.theme.BackgroundLight
 import com.example.ui.theme.GhanaGold
-import com.example.ui.theme.TextPrimary
 import com.example.ui.theme.TextSecondary
 import com.example.ui.theme.TextTertiary
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
+
+private val YearTabs = listOf(
+    1 to "Year 1 (SHS 1)",
+    2 to "Year 2 (SHS 2)",
+    3 to "Year 3 (SHS 3)"
+)
+
+private val AllTracks = CourseTrack.entries
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,15 +90,29 @@ fun AkisssMainScreen(
     onOpenDownloadsFolder: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val selectedYear by viewModel.selectedYear.collectAsState()
-    val searchQuery by viewModel.searchQuery.collectAsState()
-    val selectedTrack by viewModel.selectedTrack.collectAsState()
-    val subjects by viewModel.filteredSubjects.collectAsState()
-    val downloadStates by viewModel.downloadStates.collectAsState()
-    val detailSubject by viewModel.selectedSubjectForDetail.collectAsState()
-    val feedbackMessage by viewModel.userFeedbackMessage.collectAsState()
+    val selectedYear by viewModel.selectedYear.collectAsStateWithLifecycle()
+    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
+    val selectedTrack by viewModel.selectedTrack.collectAsStateWithLifecycle()
+    val subjectsByYear by viewModel.subjectsByYear.collectAsStateWithLifecycle()
+    val downloadStates by viewModel.downloadStates.collectAsStateWithLifecycle()
+    val detailSubject by viewModel.selectedSubjectForDetail.collectAsStateWithLifecycle()
+    val feedbackMessage by viewModel.userFeedbackMessage.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+    val pagerState = rememberPagerState(
+        initialPage = (selectedYear - 1).coerceIn(0, 2),
+        pageCount = { YearTabs.size }
+    )
+
+    // Keep ViewModel selectedYear synced smoothly with HorizontalPager
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }
+            .distinctUntilChanged()
+            .collect { page ->
+                viewModel.selectYear(page + 1)
+            }
+    }
 
     LaunchedEffect(feedbackMessage) {
         feedbackMessage?.let {
@@ -97,16 +121,11 @@ fun AkisssMainScreen(
         }
     }
 
-    val yearTabs = listOf(
-        1 to "Year 1 (SHS 1)",
-        2 to "Year 2 (SHS 2)",
-        3 to "Year 3 (SHS 3)"
-    )
-
     Scaffold(
         modifier = modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = BackgroundLight
+        containerColor = BackgroundLight,
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -116,7 +135,7 @@ fun AkisssMainScreen(
             // ================= HEADER (#1e3a8a) =================
             Surface(
                 color = AkisssBlue,
-                shadowElevation = 4.dp,
+                shadowElevation = 2.dp,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
@@ -128,7 +147,6 @@ fun AkisssMainScreen(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // School Crest
                         Image(
                             painter = painterResource(id = R.drawable.ic_akisss_logo),
                             contentDescription = "AKISSS School Crest",
@@ -161,26 +179,30 @@ fun AkisssMainScreen(
                             )
                         }
 
-                        // Open System Downloads folder action
                         IconButton(
                             onClick = onOpenDownloadsFolder,
                             modifier = Modifier
                                 .testTag("btn_open_downloads_folder")
-                                .size(36.dp)
-                                .background(Color(0xFF1E40AF), shape = CircleShape)
+                                .size(48.dp)
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Folder,
-                                contentDescription = "Open Downloads Directory",
-                                tint = Color.White,
-                                modifier = Modifier.size(20.dp)
-                            )
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier
+                                    .size(38.dp)
+                                    .background(Color(0xFF1E40AF), shape = CircleShape)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Folder,
+                                    contentDescription = "Open Downloads Directory",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
                         }
                     }
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    // Secondary Sub-header repository notice
                     Surface(
                         shape = RoundedCornerShape(8.dp),
                         color = AkisssBlueDark,
@@ -213,35 +235,40 @@ fun AkisssMainScreen(
                 }
             }
 
-            // ================= YEAR TABS =================
+            // ================= SMOOTH YEAR TABS =================
             Surface(
                 color = Color.White,
                 shadowElevation = 1.dp,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                ScrollableTabRow(
-                    selectedTabIndex = selectedYear - 1,
+                PrimaryTabRow(
+                    selectedTabIndex = pagerState.currentPage,
                     containerColor = Color.White,
                     contentColor = AkisssBlue,
-                    edgePadding = 16.dp,
-                    indicator = { tabPositions ->
-                        TabRowDefaults.SecondaryIndicator(
-                            modifier = Modifier.tabIndicatorOffset(tabPositions[selectedYear - 1]),
+                    indicator = {
+                        TabRowDefaults.PrimaryIndicator(
+                            modifier = Modifier.tabIndicatorOffset(pagerState.currentPage),
                             height = 3.dp,
                             color = AkisssBlue
                         )
                     }
                 ) {
-                    yearTabs.forEach { (yearNum, label) ->
+                    YearTabs.forEachIndexed { index, (yearNum, label) ->
+                        val isSelected = pagerState.currentPage == index
                         Tab(
-                            selected = selectedYear == yearNum,
-                            onClick = { viewModel.selectYear(yearNum) },
+                            selected = isSelected,
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
                             text = {
                                 Text(
                                     text = label,
-                                    fontWeight = if (selectedYear == yearNum) FontWeight.Bold else FontWeight.Medium,
-                                    fontSize = 14.sp,
-                                    color = if (selectedYear == yearNum) AkisssBlue else TextSecondary
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                    fontSize = 13.sp,
+                                    color = if (isSelected) AkisssBlue else TextSecondary,
+                                    maxLines = 1
                                 )
                             },
                             modifier = Modifier.testTag("tab_year_$yearNum")
@@ -254,17 +281,17 @@ fun AkisssMainScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(top = 8.dp, bottom = 4.dp)
             ) {
-                // Search field
                 OutlinedTextField(
                     value = searchQuery,
-                    onValueChange = { viewModel.updateSearchQuery(it) },
+                    onValueChange = viewModel::updateSearchQuery,
                     placeholder = {
                         Text(
-                            text = "Search Physics, Chemistry, Accounting, Economics, Twi...",
+                            text = "Search Physics, Chemistry, Accounting, Economics...",
                             fontSize = 13.sp,
-                            color = TextTertiary
+                            color = TextTertiary,
+                            maxLines = 1
                         )
                     },
                     leadingIcon = {
@@ -297,28 +324,27 @@ fun AkisssMainScreen(
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp)
+                        .padding(horizontal = 16.dp)
                         .testTag("input_search_subjects")
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(6.dp))
 
-                // Program Track Filter Chips
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState()),
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    CourseTrack.values().forEach { track ->
+                    items(AllTracks, key = { it.name }) { track ->
+                        val isSelected = selectedTrack == track
                         FilterChip(
-                            selected = selectedTrack == track,
+                            selected = isSelected,
                             onClick = { viewModel.selectTrack(track) },
                             label = {
                                 Text(
                                     text = track.displayName,
                                     fontSize = 12.sp,
-                                    fontWeight = if (selectedTrack == track) FontWeight.Bold else FontWeight.Normal
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                                 )
                             },
                             colors = FilterChipDefaults.filterChipColors(
@@ -329,8 +355,8 @@ fun AkisssMainScreen(
                             ),
                             border = FilterChipDefaults.filterChipBorder(
                                 enabled = true,
-                                selected = selectedTrack == track,
-                                borderColor = if (selectedTrack == track) AkisssBlue else Color(0xFFCBD5E1)
+                                selected = isSelected,
+                                borderColor = if (isSelected) AkisssBlue else Color(0xFFCBD5E1)
                             ),
                             modifier = Modifier.testTag("chip_filter_${track.name}")
                         )
@@ -338,96 +364,27 @@ fun AkisssMainScreen(
                 }
             }
 
-            // ================= RECYCLER / CARDS LIST =================
-            if (subjects.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .padding(32.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = null,
-                            tint = Color(0xFF94A3B8),
-                            modifier = Modifier.size(48.dp)
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "No subjects match '$searchQuery'",
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = TextSecondary
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Try searching for Physics, Chemistry, Biology, Economics, Accounting...",
-                            fontSize = 13.sp,
-                            color = TextTertiary
-                        )
-                    }
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .testTag("list_core_subjects")
-                ) {
-                    // Header banner
-                    item {
-                        Surface(
-                            shape = RoundedCornerShape(10.dp),
-                            color = Color(0xFFEFF6FF),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 6.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(12.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.DownloadDone,
-                                    contentDescription = null,
-                                    tint = AkisssBlue,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Spacer(modifier = Modifier.width(10.dp))
-                                Column {
-                                    Text(
-                                        text = "Year $selectedYear • ${if (selectedTrack == CourseTrack.ALL) "All Core & Elective Syllabuses" else selectedTrack.displayName}",
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = AkisssBlue
-                                    )
-                                    Text(
-                                        text = "Downloads are saved directly to device /Downloads with system notifications",
-                                        fontSize = 11.sp,
-                                        color = TextSecondary
-                                    )
-                                }
-                            }
-                        }
-                    }
+            // ================= SWIPEABLE YEAR PAGES =================
+            HorizontalPager(
+                state = pagerState,
+                beyondViewportPageCount = 1,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) { pageIndex ->
+                val pageYear = pageIndex + 1
+                val pageSubjects = subjectsByYear[pageYear].orEmpty()
 
-                    items(subjects, key = { it.id }) { subject ->
-                        val state = downloadStates[subject.id] ?: DownloadState.READY
-                        SubjectCard(
-                            subject = subject,
-                            downloadState = state,
-                            onDownloadClick = { viewModel.downloadSubjectPdf(subject) },
-                            onOpenClick = { viewModel.openSubjectPdf(subject) },
-                            onDetailsClick = { viewModel.selectSubjectForDetail(subject) }
-                        )
-                    }
-
-                    item {
-                        Spacer(modifier = Modifier.height(20.dp))
-                    }
-                }
+                YearSubjectsPage(
+                    year = pageYear,
+                    selectedTrack = selectedTrack,
+                    searchQuery = searchQuery,
+                    subjects = pageSubjects,
+                    downloadStates = downloadStates,
+                    onDownloadClick = viewModel::downloadSubjectPdf,
+                    onOpenClick = viewModel::openSubjectPdf,
+                    onDetailsClick = viewModel::selectSubjectForDetail
+                )
             }
         }
     }
@@ -443,5 +400,117 @@ fun AkisssMainScreen(
             onOpenClick = { viewModel.openSubjectPdf(subject) },
             onOpenBrowserClick = { viewModel.openSubjectUrlInBrowser(subject) }
         )
+    }
+}
+
+@Composable
+private fun YearSubjectsPage(
+    year: Int,
+    selectedTrack: CourseTrack,
+    searchQuery: String,
+    subjects: List<SubjectItem>,
+    downloadStates: Map<String, DownloadState>,
+    onDownloadClick: (SubjectItem) -> Unit,
+    onOpenClick: (SubjectItem) -> Unit,
+    onDetailsClick: (SubjectItem) -> Unit
+) {
+    val listState = rememberLazyListState()
+
+    if (subjects.isEmpty()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null,
+                    tint = Color(0xFF94A3B8),
+                    modifier = Modifier.size(48.dp)
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = if (searchQuery.isNotBlank()) {
+                        "No subjects match '$searchQuery'"
+                    } else {
+                        "No subjects available in ${selectedTrack.displayName}"
+                    },
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = TextSecondary
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Try searching for Physics, Chemistry, Biology, Economics, Accounting...",
+                    fontSize = 13.sp,
+                    color = TextTertiary
+                )
+            }
+        }
+    } else {
+        LazyColumn(
+            state = listState,
+            contentPadding = PaddingValues(bottom = 20.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag(if (year == 1) "list_core_subjects" else "list_subjects_year_$year")
+        ) {
+            item(key = "header_$year", contentType = "banner") {
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = Color(0xFFEFF6FF),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 6.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.DownloadDone,
+                            contentDescription = null,
+                            tint = AkisssBlue,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column {
+                            Text(
+                                text = "Year $year • ${if (selectedTrack == CourseTrack.ALL) "All Core & Elective Syllabuses" else selectedTrack.displayName}",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = AkisssBlue
+                            )
+                            Text(
+                                text = "Downloads are saved directly to device /Downloads with system notifications",
+                                fontSize = 11.sp,
+                                color = TextSecondary
+                            )
+                        }
+                    }
+                }
+            }
+
+            items(
+                items = subjects,
+                key = { it.id },
+                contentType = { "subject_card" }
+            ) { subject ->
+                val state = downloadStates[subject.id] ?: DownloadState.READY
+                val downloadAction = remember(subject.id) { { onDownloadClick(subject) } }
+                val openAction = remember(subject.id) { { onOpenClick(subject) } }
+                val detailsAction = remember(subject.id) { { onDetailsClick(subject) } }
+
+                SubjectCard(
+                    subject = subject,
+                    downloadState = state,
+                    onDownloadClick = downloadAction,
+                    onOpenClick = openAction,
+                    onDetailsClick = detailsAction
+                )
+            }
+        }
     }
 }

@@ -8,12 +8,14 @@ import com.example.data.CurriculumRepository
 import com.example.data.DownloadState
 import com.example.data.SubjectItem
 import com.example.download.CurriculumDownloadManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 
 class AkisssViewModel(application: Application) : AndroidViewModel(application) {
@@ -41,28 +43,57 @@ class AkisssViewModel(application: Application) : AndroidViewModel(application) 
     private val _userFeedbackMessage = MutableStateFlow<String?>(null)
     val userFeedbackMessage: StateFlow<String?> = _userFeedbackMessage.asStateFlow()
 
-    val filteredSubjects = combine(
-        _selectedYear,
+    // Pre-grouped subjects per year (1, 2, 3) filtered on Dispatchers.Default for lag-free horizontal paging
+    val subjectsByYear: StateFlow<Map<Int, List<SubjectItem>>> = combine(
         _searchQuery,
         _selectedTrack
-    ) { year, query, track ->
-        CurriculumRepository.subjects.filter { subject ->
-            val matchesYear = subject.year == year
-            val matchesTrack = when (track) {
-                CourseTrack.ALL -> true
-                else -> subject.courseTrack == track
-            }
-            val matchesQuery = if (query.isBlank()) {
+    ) { query, track ->
+        val trimmedQuery = query.trim()
+        val year1 = ArrayList<SubjectItem>(20)
+        val year2 = ArrayList<SubjectItem>(20)
+        val year3 = ArrayList<SubjectItem>(20)
+
+        for (subject in CurriculumRepository.subjects) {
+            val matchesTrack = track == CourseTrack.ALL || subject.courseTrack == track
+            if (!matchesTrack) continue
+
+            val matchesQuery = if (trimmedQuery.isEmpty()) {
                 true
             } else {
-                subject.title.contains(query, ignoreCase = true) ||
-                subject.curriculumCode.contains(query, ignoreCase = true) ||
-                subject.description.contains(query, ignoreCase = true) ||
-                subject.courseTrack.displayName.contains(query, ignoreCase = true) ||
-                subject.topics.any { it.contains(query, ignoreCase = true) }
+                subject.title.contains(trimmedQuery, ignoreCase = true) ||
+                    subject.curriculumCode.contains(trimmedQuery, ignoreCase = true) ||
+                    subject.description.contains(trimmedQuery, ignoreCase = true) ||
+                    subject.courseTrack.displayName.contains(trimmedQuery, ignoreCase = true) ||
+                    subject.topics.any { it.contains(trimmedQuery, ignoreCase = true) }
             }
-            matchesYear && matchesTrack && matchesQuery
+
+            if (matchesQuery) {
+                when (subject.year) {
+                    1 -> year1.add(subject)
+                    2 -> year2.add(subject)
+                    3 -> year3.add(subject)
+                }
+            }
         }
+
+        mapOf(1 to year1, 2 to year2, 3 to year3)
+    }
+        .flowOn(Dispatchers.Default)
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            mapOf(
+                1 to CurriculumRepository.getSubjectsForYear(1),
+                2 to CurriculumRepository.getSubjectsForYear(2),
+                3 to CurriculumRepository.getSubjectsForYear(3)
+            )
+        )
+
+    val filteredSubjects: StateFlow<List<SubjectItem>> = combine(
+        _selectedYear,
+        subjectsByYear
+    ) { year, byYear ->
+        byYear[year].orEmpty()
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
@@ -70,7 +101,6 @@ class AkisssViewModel(application: Application) : AndroidViewModel(application) 
     )
 
     init {
-        // Setup download listener callbacks
         downloadManager.onDownloadStarted = { subject ->
             updateDownloadState(subject.id, DownloadState.DOWNLOADING)
             _userFeedbackMessage.value = "Download started: ${subject.title} (Year ${subject.year}) PDF"
@@ -91,15 +121,21 @@ class AkisssViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun selectYear(year: Int) {
-        _selectedYear.value = year
+        if (_selectedYear.value != year) {
+            _selectedYear.value = year
+        }
     }
 
     fun updateSearchQuery(query: String) {
-        _searchQuery.value = query
+        if (_searchQuery.value != query) {
+            _searchQuery.value = query
+        }
     }
 
     fun selectTrack(track: CourseTrack) {
-        _selectedTrack.value = track
+        if (_selectedTrack.value != track) {
+            _selectedTrack.value = track
+        }
     }
 
     fun selectSubjectForDetail(subject: SubjectItem?) {
@@ -113,7 +149,7 @@ class AkisssViewModel(application: Application) : AndroidViewModel(application) 
     fun downloadSubjectPdf(subject: SubjectItem) {
         viewModelScope.launch {
             updateDownloadState(subject.id, DownloadState.DOWNLOADING)
-            downloadManager.enqueueDownload(subject)
+            downloadManager.enqueueDownloadAsync(subject)
         }
     }
 
@@ -130,29 +166,33 @@ class AkisssViewModel(application: Application) : AndroidViewModel(application) 
 
     fun refreshDownloadedFilesStatus() {
         viewModelScope.launch {
-            val states = mutableMapOf<String, DownloadState>()
-            for (subject in CurriculumRepository.subjects) {
-                if (downloadManager.isFileDownloaded(subject)) {
-                    states[subject.id] = DownloadState.COMPLETED
-                } else {
-                    states[subject.id] = DownloadState.READY
+            val freshStates = downloadManager.checkAllDownloadStatesAsync(CurriculumRepository.subjects)
+            val current = _downloadStates.value
+            // Preserve active DOWNLOADING states and only emit if values actually changed
+            val merged = freshStates.toMutableMap()
+            for ((id, state) in current) {
+                if (state == DownloadState.DOWNLOADING) {
+                    merged[id] = DownloadState.DOWNLOADING
                 }
             }
-            _downloadStates.value = states
+            if (merged != current) {
+                _downloadStates.value = merged
+            }
         }
     }
 
     private fun updateDownloadState(subjectId: String, state: DownloadState) {
-        _downloadStates.value = _downloadStates.value.toMutableMap().apply {
+        val current = _downloadStates.value
+        if (current[subjectId] == state) return
+        _downloadStates.value = current.toMutableMap().apply {
             put(subjectId, state)
         }
     }
 
     private fun addToHistory(subject: SubjectItem) {
-        val current = _downloadHistory.value.toMutableList()
+        val current = _downloadHistory.value
         if (!current.any { it.id == subject.id }) {
-            current.add(0, subject)
-            _downloadHistory.value = current
+            _downloadHistory.value = listOf(subject) + current
         }
     }
 
